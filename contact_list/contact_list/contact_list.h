@@ -33,6 +33,9 @@ typedef struct contacts
 // Initialization of contact list
 void init_contact(contacts* pc);
 
+// Check the capacity and increase it when needed
+void check_capacity(contacts* pc);
+
 // Add a contact to contact list
 void add_contact(contacts* pc);
 
@@ -53,3 +56,6 @@ void sort_directory(contacts* pc);
 
 // Destroy the contact list
 void destroy_directory(contacts* pc);
+
+// Save the contact list to the file
+void save_contact(contacts* pc);

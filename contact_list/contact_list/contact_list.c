@@ -2,6 +2,31 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include "contact_list.h"
 
+// Load file information to contacts
+void load_contacts(contacts* pc) {
+	FILE* pf = fopen("contacts.txt", "rb");
+
+	if (pf == NULL)
+	{
+		perror("load_contacts::fopen");
+	}
+	else
+	{
+		people temp = { 0 };
+		int i = 0;
+		while (fread(&temp, sizeof(people), 1, pf))
+		{
+			check_capacity(pc);
+			pc->data[i] = temp;
+			pc->sz++;
+			i++;
+		}
+	}
+
+	fclose(pf);
+	pf = NULL;
+}
+
 void init_contact(contacts* pc) {
 	assert(pc);
 
@@ -9,12 +34,15 @@ void init_contact(contacts* pc) {
 	people* p = (people*)calloc(DEFAULT_SIZE, sizeof(people));
 	if (p == NULL)
 	{
-		perror("init_contact");
+		perror("init_contact::calloc");
 		return;
 	}
 
 	pc->data = p;
 	pc->capacity = DEFAULT_SIZE;
+
+	// Load file info
+	load_contacts(pc);
 }
 
 void check_capacity(contacts* pc) {
@@ -30,7 +58,7 @@ void check_capacity(contacts* pc) {
 		pc->data = p;
 		pc->capacity += INC_SIZE;
 
-		printf("Capacity increase successful\n");
+		printf("The capacity increase was successful.\n");
 	}
 }
 
@@ -218,4 +246,24 @@ void destroy_directory(contacts* pc) {
 	pc->capacity = 0;
 	pc->sz = 0;
 	pc = NULL;
+}
+
+void save_contact(contacts* pc) {
+	FILE* pf = fopen("contacts.txt", "wb");
+
+	if (pf == NULL)
+	{
+		perror("save_contact");
+	}
+	else
+	{
+		for (int i = 0; i < pc->sz; i++)
+		{
+			fwrite(pc->data + i, sizeof(people), 1, pf);
+		}
+
+		fclose(pf);
+		pf = NULL;
+		printf("Save successuful.\n");
+	}
 }

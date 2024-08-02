@@ -58,6 +58,9 @@ int main() {
 			sort_directory(&con);
 			break;
 		case EXIT:
+			// Save Information to file
+			save_contact(&con);
+
 			destroy_directory(&con);
 			printf("Exit the directory of contact.\n");
 			break;
